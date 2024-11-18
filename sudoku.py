@@ -8,6 +8,6 @@ class SudokuGenerator:
 
 class Cell:
 
-Class Board:
+class Board:
 
 def main():
