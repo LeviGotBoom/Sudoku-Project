@@ -7,6 +7,11 @@ class SudokuGenerator:
         self.removed_cells = removed_cells
 
 class Cell:
+    def set_cell_value(self, value):
+        self.value = value
+
+    def set_sketched_value(self, value):
+        self.sketched_value = value
 
 class Board:
 
