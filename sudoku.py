@@ -8,10 +8,10 @@ class SudokuGenerator:
 
 class Cell:
     def set_cell_value(self, value):
-        self.value = value
+        self.set_cell_value = value
 
     def set_sketched_value(self, value):
-        self.sketched_value = value
+        self.set_sketched_value = value
 
 class Board:
 
