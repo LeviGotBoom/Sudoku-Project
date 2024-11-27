@@ -34,12 +34,16 @@ class Board:
 #add functions
 
 
+PINK = (255, 182, 193)
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((600, 650))
     pygame.display.set_caption("Sudoku")
 
+
+    screen.fill(PINK)
+    pygame.display.update()
 
 
     while True:
@@ -48,8 +52,8 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-
-main()
+if __name__ == '__main__':
+    main()
 
 
 
