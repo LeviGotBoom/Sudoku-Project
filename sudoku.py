@@ -39,6 +39,7 @@ FONT_COLOR = (0, 0, 0)
 WIDTH = 600
 HEIGHT = 650
 START_FONT = pygame.font.Font(None, 60)
+MED_FONT = pygame.font.Font(None, 45)
 
 def main():
     screen = pygame.display.set_mode((600, 650))
@@ -48,9 +49,15 @@ def main():
     screen.fill(PINK)
 
     start_text = "Welcome to Sudoku"
-    end_surf = START_FONT.render(start_text, 0, FONT_COLOR)
-    end_rect = end_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 200))
-    screen.blit(end_surf, end_rect)
+    start_surf = START_FONT.render(start_text, 0, FONT_COLOR)
+    start_rect = start_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 200))
+    screen.blit(start_surf, start_rect)
+
+    select_game = "Select Game Mode:"
+    select_surf = MED_FONT.render(select_game, 0, FONT_COLOR)
+    select_rect = select_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
+    screen.blit(select_surf, select_rect)
+
 
     pygame.display.update()
 
