@@ -1,5 +1,6 @@
-import pygame
+import pygame, sys
 from sudoku_generator import *
+
 
 class SudokuGenerator:
     def __init__(self, row_length, removed_cells):
@@ -20,6 +21,35 @@ class Cell:
     def set_sketched_value(self, value):
         self.sketched_value = value
 
+    def draw(self):
+        pass
+    #     Draws this cell, along with the value inside it.
+	# If this cell has a nonzero value, that value is displayed.
+	# Otherwise, no value is displayed in the cell.
+	# The cell is outlined red if it is currently selected.
+
+
 class Board:
+    pass
+#add functions
+
+
 
 def main():
+    pygame.init()
+    screen = pygame.display.set_mode((600, 650))
+    pygame.display.set_caption("Sudoku")
+
+
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+
+main()
+
+
+
