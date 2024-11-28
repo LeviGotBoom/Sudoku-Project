@@ -1,7 +1,23 @@
+from ctypes.wintypes import SIZE
+
 import pygame, sys
 from sudoku_generator import *
 import random
 
+pygame.init()
+screen = pygame.display.set_mode((600, 650))
+
+PINK = (255, 222, 222)
+RED = (255, 0, 0)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+DARK_GRAY = (196, 194, 194)
+WIDTH = 600
+HEIGHT = 650
+
+START_FONT = pygame.font.Font(None, 60)
+MED_FONT = pygame.font.Font(None, 45)
+SMALL_FONT = pygame.font.Font(None, 25)
 
 class SudokuGenerator:
     def __init__(self, row_length, removed_cells):
@@ -47,16 +63,17 @@ class SudokuGenerator:
             self.fill_box(i, i)
 
     def fill_remaining(self, row=0, col=0):
-        if col >= self.row_length and row < self.row_length - 1:
+        if col == 9:
             row += 1
             col = 0
-        if row >= self.row_length and col >= self.row_length:
+
+        if row == 9:
             return True
 
         if self.board[row][col] != 0:
             return self.fill_remaining(row, col + 1)
 
-        for num in range(1, self.row_length + 1):
+        for num in range(1, 10):
             if self.is_valid(row, col, num):
                 self.board[row][col] = num
                 if self.fill_remaining(row, col + 1):
@@ -120,23 +137,20 @@ class Board:
         self.height = height
         self.screen = screen
         self.difficulty = difficulty
-        self.cells = [[Cell(0, i, j, screem) for j in range(9)] for i in range(9)]
+        self.cells = [[Cell(0, i, j, screen) for j in range(9)] for i in range(9)]
         self.selected_cell = None
 
     def draw(self):
-        # Add background color
         self.screen.fill(PINK)
 
-        # Draw grid
-        for i in range(10):
-            line_width = 3 if i % 3 == 0 else 1
-            pygame.draw.line(self.screen, BLACK, (0, i * 60), (540, i * 60), line_width)
-            pygame.draw.line(self.screen, BLACK, (i * 60, 0), (i * 60, 540), line_width)
-
-        # Draw cells
         for row in self.cells:
             for cell in row:
                 cell.draw()
+
+        for i in range(10):
+            line_width = 5 if i % 3 == 0 else 1
+            pygame.draw.line(self.screen, BLACK, (0, i * 60), (540, i * 60), line_width)
+            pygame.draw.line(self.screen, BLACK, (i * 60, 0), (i * 60, 540), line_width)
 
     def select(self, row, col):
         if self.selected_cell:
@@ -203,26 +217,6 @@ class Board:
 
         return True
 
-pygame.init()
-screen = pygame.display.set_mode((600, 650))
-
-PINK = (255, 222, 222)
-RED = (255, 0, 0)
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-DARK_GRAY = (196, 194, 194)
-WIDTH = 600
-HEIGHT = 650
-
-START_FONT = pygame.font.Font(None, 60)
-MED_FONT = pygame.font.Font(None, 45)
-SMALL_FONT = pygame.font.Font(None, 25)
-
-
-easy_button = pygame.Rect(100, 400, 100, 50)
-medium_button = pygame.Rect(250, 400, 100, 50)
-difficult_button = pygame.Rect(400, 400, 100, 50)
-
 
 def draw_button(button, text, color, hover_color):
     mouse_position = pygame.mouse.get_pos()
@@ -245,6 +239,9 @@ def generate_sudoku(size, removed):
     return generator.get_board()
 
 def main():
+    easy_button = pygame.Rect(100, 400, 100, 50)
+    medium_button = pygame.Rect(250, 400, 100, 50)
+    difficult_button = pygame.Rect(400, 400, 100, 50)
 
     pygame.display.set_caption("Sudoku")
     screen.fill(PINK)
@@ -258,12 +255,11 @@ def main():
     select_surf = MED_FONT.render(select_game, 0, BLACK)
     select_rect = select_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
     screen.blit(select_surf, select_rect)
-
-
     pygame.display.update()
 
-    while True:
+    difficulty = None
 
+    while not difficulty:
         draw_button(easy_button, "Easy", WHITE, DARK_GRAY)
         draw_button(medium_button, "Medium", WHITE, DARK_GRAY)
         draw_button(difficult_button, "Difficult", WHITE, DARK_GRAY)
@@ -275,16 +271,53 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
                 if easy_button.collidepoint(event.pos):
-                    pass
-                    #implement easy mode board
+                    difficulty = 30
                 elif medium_button.collidepoint(event.pos):
-                    pass
-                    #implement medium mode board
+                    difficulty = 40
                 elif difficult_button.collidepoint(event.pos):
-                    pass
-                    #implement difficult mode board
+                    difficulty = 50
 
         pygame.display.update()
+
+    board_data = generate_sudoku(9, difficulty)
+    board = Board(WIDTH, HEIGHT - 50, screen, difficulty)
+
+    for i in range(9):
+        for j in range(9):
+            board.cells[i][j].set_cell_value(board_data[i][j])
+
+    reset_button = pygame.Rect(50, 560, 100, 40)
+    restart_button = pygame.Rect(250, 560, 100, 40)
+    exit_button = pygame.Rect(450, 560, 100, 40)
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                cell = board.click(*pos)
+                if cell:
+                    board.select(*cell)
+                # Implement back-end functions
+            elif event.type == pygame.KEYDOWN:
+                pass
+                # Implement back-end functions
+
+        board.update_board()
+        board.draw()
+
+        draw_button(reset_button, "RESET", WHITE, DARK_GRAY)
+        draw_button(restart_button, "RESTART", WHITE, DARK_GRAY)
+        draw_button(exit_button, "EXIT", WHITE, DARK_GRAY)
+
+        pygame.display.update()
+
+    pygame.quit()
+    sys.exit()
+
+
 
 if __name__ == '__main__':
     main()
