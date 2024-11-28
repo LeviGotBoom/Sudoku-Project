@@ -53,6 +53,19 @@ medium_button = pygame.Rect(250, 400, 100, 50)
 difficult_button = pygame.Rect(400, 400, 100, 50)
 
 
+def draw_button(button, text, color, hover_color):
+    mouse_position = pygame.mouse.get_pos()
+
+    if button.collidepoint(mouse_position):
+        pygame.draw.rect(screen, hover_color, button)
+    else:
+        pygame.draw.rect(screen, color, button)
+
+    text_surf = SMALL_FONT.render(text, 0, BLACK)
+    rect_button = text_surf.get_rect(center=button.center)
+    screen.blit(text_surf, rect_button)
+
+    return button
 
 def main():
 
@@ -71,20 +84,6 @@ def main():
 
 
     pygame.display.update()
-
-    def draw_button(button, text, color, hover_color):
-        mouse_position = pygame.mouse.get_pos()
-
-        if button.collidepoint(mouse_position):
-            pygame.draw.rect(screen, hover_color, button)
-        else:
-            pygame.draw.rect(screen, color, button)
-
-        text_surf = SMALL_FONT.render(text, 0, BLACK)
-        rect_button = text_surf.get_rect(center=button.center)
-        screen.blit(text_surf, rect_button)
-
-        return button
 
     while True:
 
@@ -107,6 +106,7 @@ def main():
                 elif difficult_button.collidepoint(event.pos):
                     pass
                     #implement difficult mode board
+
         pygame.display.update()
 
 if __name__ == '__main__':
