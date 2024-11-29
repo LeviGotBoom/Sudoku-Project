@@ -1,5 +1,3 @@
-from ctypes.wintypes import SIZE
-
 import pygame, sys
 from sudoku_generator import *
 import random
