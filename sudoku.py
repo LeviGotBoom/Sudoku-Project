@@ -295,6 +295,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 cell = board.click(*pos)
@@ -310,10 +311,27 @@ def main():
                 elif exit_button.collidepoint(pos):
                     pygame.quit()
                     sys.exit()
-                # Implement back-end functions
+
             elif event.type == pygame.KEYDOWN:
-                pass
-                # Implement back-end functions
+                if board.selected_cell:
+                    if event.key in range(pygame.K_1, pygame.K_9 + 1):
+                        board.selected_cell.set_sketched_value(event.key - pygame.K_0)
+                    elif event.key == pygame.K_RETURN:
+                        if board.selected_cell.sketched_value:
+                            board.selected_cell.set_cell_value(board.selected_cell.sketched_value)
+                            board.selected_cell.set_sketched_value(0)
+                    elif event.key == pygame.K_UP:
+                        row, col = board.selected_cell.row, board.selected_cell.col
+                        board.select(max(row - 1, 0), col)
+                    elif event.key == pygame.K_DOWN:
+                        row, col = board.selected_cell.row, board.selected_cell.col
+                        board.select(min(row + 1, 8), col)
+                    elif event.key == pygame.K_LEFT:
+                        row, col = board.selected_cell.row, board.selected_cell.col
+                        board.select(row, max(col - 1, 0))
+                    elif event.key == pygame.K_RIGHT:
+                        row, col = board.selected_cell.row, board.selected_cell.col
+                        board.select(row, min(col + 1, 8))
 
         board.update_board()
         board.draw()
@@ -326,6 +344,7 @@ def main():
 
     pygame.quit()
     sys.exit()
+
 
 
 
