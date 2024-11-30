@@ -333,6 +333,24 @@ def main():
                         row, col = board.selected_cell.row, board.selected_cell.col
                         board.select(row, min(col + 1, 8))
 
+        if board.is_full():
+            if board.check_board():
+                screen.fill(PINK)
+                win_text = "Game Won!!"
+                win_surf = START_FONT.render(win_text, 0, BLACK)
+                win_rect = win_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+                screen.blit(win_surf, win_rect)
+                pygame.display.update()
+                running = False
+            else:
+                screen.fill(PINK)
+                lose_text = "Game Over :("
+                lose_surf = START_FONT.render(lose_text, 0, BLACK)
+                lose_rect = lose_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+                screen.blit(lose_surf, lose_rect)
+                pygame.display.update()
+                running = False
+
         board.update_board()
         board.draw()
 
