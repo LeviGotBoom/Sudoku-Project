@@ -1,5 +1,3 @@
-from ctypes.wintypes import SIZE
-
 import pygame, sys
 from sudoku_generator import *
 import random
@@ -291,6 +289,8 @@ def main():
     exit_button = pygame.Rect(450, 560, 100, 40)
 
     running = True
+    initial_board = [[cell.value for cell in row] for row in board.cells]
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -300,6 +300,16 @@ def main():
                 cell = board.click(*pos)
                 if cell:
                     board.select(*cell)
+                elif reset_button.collidepoint(pos):
+                    for i in range(9):
+                        for j in range(9):
+                            board.cells[i][j].set_cell_value(initial_board[i][j])
+                            board.cells[i][j].set_sketched_value(0)
+                elif restart_button.collidepoint(pos):
+                    main()
+                elif exit_button.collidepoint(pos):
+                    pygame.quit()
+                    sys.exit()
                 # Implement back-end functions
             elif event.type == pygame.KEYDOWN:
                 pass
@@ -321,6 +331,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
