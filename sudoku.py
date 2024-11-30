@@ -341,6 +341,7 @@ def main():
                 win_rect = win_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2))
                 screen.blit(win_surf, win_rect)
                 pygame.display.update()
+                pygame.time.delay(3000)
                 running = False
             else:
                 screen.fill(PINK)
@@ -349,6 +350,7 @@ def main():
                 lose_rect = lose_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2))
                 screen.blit(lose_surf, lose_rect)
                 pygame.display.update()
+                pygame.time.delay(3000)
                 running = False
 
         board.update_board()
@@ -362,8 +364,6 @@ def main():
 
     pygame.quit()
     sys.exit()
-
-
 
 
 if __name__ == '__main__':
