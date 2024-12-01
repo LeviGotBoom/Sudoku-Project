@@ -320,6 +320,9 @@ def main():
                         if board.selected_cell.sketched_value:
                             board.selected_cell.set_cell_value(board.selected_cell.sketched_value)
                             board.selected_cell.set_sketched_value(0)
+                    elif event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE:
+                        board.selected_cell.set_cell_value(0)
+                        board.selected_cell.set_sketched_value(0)
                     elif event.key == pygame.K_UP:
                         row, col = board.selected_cell.row, board.selected_cell.col
                         board.select(max(row - 1, 0), col)
@@ -340,18 +343,46 @@ def main():
                 win_surf = START_FONT.render(win_text, 0, BLACK)
                 win_rect = win_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2))
                 screen.blit(win_surf, win_rect)
+
+                exit_button_win = pygame.Rect(250, HEIGHT // 2 + 50, 100, 40)
+                draw_button(exit_button_win, "EXIT", WHITE, DARK_GRAY)
+
                 pygame.display.update()
-                pygame.time.delay(3000)
-                running = False
+                while True:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            sys.exit()
+                        elif event.type == pygame.MOUSEBUTTONDOWN:
+                            if exit_button_win.collidepoint(event.pos):
+                                pygame.quit()
+                                sys.exit()
+
             else:
                 screen.fill(PINK)
                 lose_text = "Game Over :("
                 lose_surf = START_FONT.render(lose_text, 0, BLACK)
                 lose_rect = lose_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2))
                 screen.blit(lose_surf, lose_rect)
+
+                restart_button_lose = pygame.Rect(150, HEIGHT // 2 + 50, 100, 40)
+                exit_button_lose = pygame.Rect(350, HEIGHT // 2 + 50, 100, 40)
+
+                draw_button(restart_button_lose, "RESTART", WHITE, DARK_GRAY)
+                draw_button(exit_button_lose, "EXIT", WHITE, DARK_GRAY)
+
                 pygame.display.update()
-                pygame.time.delay(3000)
-                running = False
+                while True:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            sys.exit()
+                        elif event.type == pygame.MOUSEBUTTONDOWN:
+                            if restart_button_lose.collidepoint(event.pos):
+                                main()
+                            elif exit_button_lose.collidepoint(event.pos):
+                                pygame.quit()
+                                sys.exit()
 
         board.update_board()
         board.draw()
