@@ -101,12 +101,15 @@ class Cell:
         self.screen = screen
         self.selected = False
         self.sketched_value = 0
+        self.immutable = value != 0
 
     def set_cell_value(self, value):
-        self.value = value
+        if not self.immutable:
+            self.value = value
 
     def set_sketched_value(self, value):
-        self.sketched_value = value
+        if not self.immutable:
+            self.sketched_value = value
 
     def draw(self):
         #Draw the cell and its content on the screen."""
@@ -282,6 +285,7 @@ def main():
     for i in range(9):
         for j in range(9):
             board.cells[i][j].set_cell_value(board_data[i][j])
+            board.cells[i][j].immutable = board_data[i][j] != 0
 
     reset_button = pygame.Rect(50, 560, 100, 40)
     restart_button = pygame.Rect(250, 560, 100, 40)
