@@ -267,7 +267,6 @@ def main():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                x, y = event.pos
                 if easy_button.collidepoint(event.pos):
                     difficulty = 30
                 elif medium_button.collidepoint(event.pos):
@@ -395,7 +394,6 @@ def main():
 
     pygame.quit()
     sys.exit()
-
 
 if __name__ == '__main__':
     main()
