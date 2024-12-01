@@ -344,11 +344,12 @@ def main():
                 win_rect = win_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2))
                 screen.blit(win_surf, win_rect)
 
-                exit_button_win = pygame.Rect(250, HEIGHT // 2 + 50, 100, 40)
-                draw_button(exit_button_win, "EXIT", WHITE, DARK_GRAY)
 
-                pygame.display.update()
                 while True:
+                    exit_button_win = pygame.Rect(250, HEIGHT // 2 + 50, 100, 40)
+                    draw_button(exit_button_win, "EXIT", WHITE, DARK_GRAY)
+
+                    pygame.display.update()
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             pygame.quit()
@@ -368,11 +369,14 @@ def main():
                 restart_button_lose = pygame.Rect(150, HEIGHT // 2 + 50, 100, 40)
                 exit_button_lose = pygame.Rect(350, HEIGHT // 2 + 50, 100, 40)
 
-                draw_button(restart_button_lose, "RESTART", WHITE, DARK_GRAY)
-                draw_button(exit_button_lose, "EXIT", WHITE, DARK_GRAY)
 
-                pygame.display.update()
                 while True:
+                    restart_button_lose = pygame.Rect(150, HEIGHT // 2 + 50, 100, 40)
+                    exit_button_lose = pygame.Rect(350, HEIGHT // 2 + 50, 100, 40)
+                    draw_button(restart_button_lose, "RESTART", WHITE, DARK_GRAY)
+                    draw_button(exit_button_lose, "EXIT", WHITE, DARK_GRAY)
+
+                    pygame.display.update()
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             pygame.quit()
