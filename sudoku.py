@@ -30,6 +30,16 @@ class SudokuGenerator:
         for row in self.board:
             print(" ".join(str(num) if num != 0 else "." for num in row))
 
+        import os
+        terminal_width = os.get_terminal_size().columns
+        board_width = col_length * 4
+
+        padding = max((terminal_width - board_width) // 2, 0)
+
+        for row in board:
+            formatted_row = " | ".join(str(cell) if cell != 0 else " " for cell in row)
+            print(" " * padding + "| " + formatted_row + " |")
+
     def valid_in_row(self, row, num):
         return num not in self.board[row]
 
@@ -111,9 +121,9 @@ class Cell:
         if not self.immutable:
             self.sketched_value = value
 
-    def draw(self):
-        #Draw the cell and its content on the screen."""
-        x, y = self.col * 60, self.row * 60
+    def draw(self, offset_x=0, offset_y=0):
+        # Draw the cell and its content on the screen
+        x, y = self.col * 60 + offset_x, self.row * 60 + offset_y
         cell_size = 60
 
         # Draw cell background
@@ -127,7 +137,9 @@ class Cell:
         # Draw cell value or sketched value
         if self.value != 0:
             text = MED_FONT.render(str(self.value), True, BLACK)
-            self.screen.blit(text, (x + 20, y + 15))  # Centered in the cell
+            text_rect = text.get_rect(center=(x + cell_size / 2, y + cell_size / 2))  # Centered text
+            self.screen.blit(text, text_rect)
+
         elif self.sketched_value != 0:
             text = SMALL_FONT.render(str(self.sketched_value), True, DARK_GRAY)
             self.screen.blit(text, (x + 5, y + 5))  # Top-left corner for sketched value
@@ -140,19 +152,24 @@ class Board:
         self.difficulty = difficulty
         self.cells = [[Cell(0, i, j, screen) for j in range(9)] for i in range(9)]
         self.selected_cell = None
+        self.offset_x = (WIDTH - 540) // 2 # centers it horizontally
+        self.offset_y = (HEIGHT - 540) // 2 - 30  # offcentered to make space for buttons
 
     def draw(self):
         self.screen.fill(PINK)
 
         for row in self.cells:
             for cell in row:
-                cell.draw()
+                cell.draw(self.offset_x, self.offset_y)
 
         for i in range(10):
             line_width = 5 if i % 3 == 0 else 1
-            pygame.draw.line(self.screen, BLACK, (0, i * 60), (540, i * 60), line_width)
-            pygame.draw.line(self.screen, BLACK, (i * 60, 0), (i * 60, 540), line_width)
-
+            pygame.draw.line(self.screen, BLACK,
+                             (self.offset_x, self.offset_y + i * 60),
+                             (self.offset_x + 540, self.offset_y + i * 60), line_width)
+            pygame.draw.line(self.screen, BLACK,
+                             (self.offset_x + i * 60, self.offset_y),
+                             (self.offset_x + i * 60, self.offset_y + 540), line_width)
     def select(self, row, col):
         if self.selected_cell:
             self.selected_cell.selected = False
@@ -160,9 +177,9 @@ class Board:
         self.selected_cell.selected = True
 
     def click(self, x, y):
-        if 0 <= x < 540 and 0 <= y < 540:
-            row = y // 60
-            col = x // 60
+        if self.offset_x <= x < self.offset_x + 540 and self.offset_y <= y < self.offset_y + 540:
+            row = (y - self.offset_y) // 60
+            col = (x - self.offset_x) // 60
             return row, col
         return None
 
@@ -287,9 +304,9 @@ def main():
             board.cells[i][j].set_cell_value(board_data[i][j])
             board.cells[i][j].immutable = board_data[i][j] != 0
 
-    reset_button = pygame.Rect(50, 560, 100, 40)
-    restart_button = pygame.Rect(250, 560, 100, 40)
-    exit_button = pygame.Rect(450, 560, 100, 40)
+    reset_button = pygame.Rect(50, 590, 100, 40)
+    restart_button = pygame.Rect(250, 590, 100, 40)
+    exit_button = pygame.Rect(450, 590, 100, 40) #moves buttons
 
     running = True
     initial_board = [[cell.value for cell in row] for row in board.cells]
