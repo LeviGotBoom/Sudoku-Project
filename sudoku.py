@@ -336,6 +336,7 @@ def main():
                         for j in range(9):
                             board.cells[i][j].set_cell_value(initial_board[i][j])
                             board.cells[i][j].set_sketched_value(0)
+                    start_ticks = pygame.time.get_ticks()
                 elif restart_button.collidepoint(pos):
                     main()
                 elif exit_button.collidepoint(pos):
