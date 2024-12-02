@@ -265,7 +265,6 @@ def main():
     pygame.display.set_caption("Sudoku")
     screen.fill(PINK)
 
-    start_ticks = pygame.time.get_ticks()
     font_timer = pygame.font.Font(None, 35)
 
     start_text = "Welcome to Sudoku"
@@ -300,6 +299,8 @@ def main():
 
         pygame.display.update()
 
+    start_ticks = pygame.time.get_ticks()
+
     board_data = generate_sudoku(9, difficulty)
     board = Board(WIDTH, HEIGHT - 50, screen, difficulty)
 
@@ -311,6 +312,9 @@ def main():
     reset_button = pygame.Rect(50, 590, 100, 40)
     restart_button = pygame.Rect(250, 590, 100, 40)
     exit_button = pygame.Rect(450, 590, 100, 40) #moves buttons
+
+    win_image = pygame.image.load("cartoon_crown.png")
+    win_image = pygame.transform.scale(win_image, (150, 150))
 
     running = True
     initial_board = [[cell.value for cell in row] for row in board.cells]
@@ -374,6 +378,8 @@ def main():
                 win_surf = START_FONT.render(win_text, 0, BLACK)
                 win_rect = win_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2))
                 screen.blit(win_surf, win_rect)
+
+                screen.blit(win_image, (WIDTH // 2 - win_image.get_width() // 2, HEIGHT // 2 - 100 - 60))
 
                 while True:
                     exit_button_win = pygame.Rect(250, HEIGHT // 2 + 50, 100, 40)
