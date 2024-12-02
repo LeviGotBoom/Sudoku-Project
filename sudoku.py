@@ -1,6 +1,7 @@
 import pygame, sys
 from sudoku_generator import *
 import random
+import time
 
 pygame.init()
 screen = pygame.display.set_mode((600, 650))
@@ -153,7 +154,7 @@ class Board:
         self.cells = [[Cell(0, i, j, screen) for j in range(9)] for i in range(9)]
         self.selected_cell = None
         self.offset_x = (WIDTH - 540) // 2 # centers it horizontally
-        self.offset_y = (HEIGHT - 540) // 2 - 30  # offcentered to make space for buttons
+        self.offset_y = (HEIGHT - 540) // 2 - 20  # offcentered to make space for buttons
 
     def draw(self):
         self.screen.fill(PINK)
@@ -264,6 +265,9 @@ def main():
     pygame.display.set_caption("Sudoku")
     screen.fill(PINK)
 
+    start_ticks = pygame.time.get_ticks()
+    font_timer = pygame.font.Font(None, 35)
+
     start_text = "Welcome to Sudoku"
     start_surf = START_FONT.render(start_text, 0, BLACK)
     start_rect = start_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 200))
@@ -312,6 +316,12 @@ def main():
     initial_board = [[cell.value for cell in row] for row in board.cells]
 
     while running:
+        #time information
+        elapsed_time = (pygame.time.get_ticks() - start_ticks) // 1000  # Time in seconds
+        minutes = elapsed_time // 60
+        seconds = elapsed_time % 60
+        timer_text = f"Time: {minutes:02}:{seconds:02}"
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -406,6 +416,11 @@ def main():
 
         board.update_board()
         board.draw()
+
+        # creating the timer
+        timer_surface = font_timer.render(timer_text, True, BLACK)
+        timer_rect = timer_surface.get_rect(center=(WIDTH // 2, 20))
+        screen.blit(timer_surface, timer_rect)
 
         draw_button(reset_button, "RESET", WHITE, DARK_GRAY)
         draw_button(restart_button, "RESTART", WHITE, DARK_GRAY)
