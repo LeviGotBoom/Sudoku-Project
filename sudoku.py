@@ -18,6 +18,7 @@ START_FONT = pygame.font.Font(None, 60)
 MED_FONT = pygame.font.Font(None, 45)
 SMALL_FONT = pygame.font.Font(None, 25)
 
+
 class SudokuGenerator:
     def __init__(self, row_length, removed_cells):
         self.row_length = row_length
@@ -265,6 +266,12 @@ def select_mode(subtitle, button_names, options):
 
     screen.fill(PINK)
 
+    #
+    # arrow_image = pygame.image.load("pinkarrowkeys.png")
+    # arrow_image = pygame.transform.scale(arrow_image, (50, 50))
+    #
+    # screen.blit(arrow_image, (WIDTH // 2 - arrow_image.get_width() // 2, HEIGHT // 2 - 200))
+
     start_text = "Welcome to Sudoku"
     start_surf = START_FONT.render(start_text, 0, BLACK)
     start_rect = start_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 200))
@@ -274,6 +281,8 @@ def select_mode(subtitle, button_names, options):
     select_rect = select_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
     screen.blit(select_surf, select_rect)
     pygame.display.update()
+
+
 
     while not mode_value:
         draw_button(button_one, button_names[0], WHITE, DARK_GRAY)
@@ -342,6 +351,7 @@ def main():
 
     win_image = pygame.image.load("cartoon_crown.png")
     win_image = pygame.transform.scale(win_image, (150, 150))
+
 
     running = True
     initial_board = [[cell.value for cell in row] for row in board.cells]
