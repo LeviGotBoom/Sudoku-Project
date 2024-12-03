@@ -2,7 +2,6 @@ import pygame, sys
 from sudoku_generator import *
 import random
 import time
-
 pygame.init()
 screen = pygame.display.set_mode((600, 650))
 
@@ -265,12 +264,6 @@ def select_mode(subtitle, button_names, options):
     mode_value = None
 
     screen.fill(PINK)
-
-    #
-    # arrow_image = pygame.image.load("pinkarrowkeys.png")
-    # arrow_image = pygame.transform.scale(arrow_image, (50, 50))
-    #
-    # screen.blit(arrow_image, (WIDTH // 2 - arrow_image.get_width() // 2, HEIGHT // 2 - 200))
 
     start_text = "Welcome to Sudoku"
     start_surf = START_FONT.render(start_text, 0, BLACK)
