@@ -277,6 +277,7 @@ def select_mode(subtitle, button_names, options):
 
 
 
+
     while not mode_value:
         draw_button(button_one, button_names[0], WHITE, DARK_GRAY)
         draw_button(button_two, button_names[1], WHITE, DARK_GRAY)
