@@ -33,11 +33,11 @@ class SudokuGenerator:
 
         import os
         terminal_width = os.get_terminal_size().columns
-        board_width = col_length * 4
+        board_width = self.row_length * 4
 
         padding = max((terminal_width - board_width) // 2, 0)
 
-        for row in board:
+        for row in self.board:
             formatted_row = " | ".join(str(cell) if cell != 0 else " " for cell in row)
             print(" " * padding + "| " + formatted_row + " |")
 
@@ -257,47 +257,74 @@ def generate_sudoku(size, removed):
     generator.remove_cells()
     return generator.get_board()
 
-def main():
-    easy_button = pygame.Rect(100, 400, 100, 50)
-    medium_button = pygame.Rect(250, 400, 100, 50)
-    difficult_button = pygame.Rect(400, 400, 100, 50)
+def select_mode(subtitle, button_names, options):
+    button_one = pygame.Rect(100, 400, 100, 50)
+    button_two = pygame.Rect(250, 400, 100, 50)
+    button_three = pygame.Rect(400, 400, 100, 50)
+    mode_value = None
 
-    pygame.display.set_caption("Sudoku")
     screen.fill(PINK)
-
-    font_timer = pygame.font.Font(None, 35)
 
     start_text = "Welcome to Sudoku"
     start_surf = START_FONT.render(start_text, 0, BLACK)
     start_rect = start_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 200))
     screen.blit(start_surf, start_rect)
 
-    select_game = "Select Game Mode:"
-    select_surf = MED_FONT.render(select_game, 0, BLACK)
+    select_surf = MED_FONT.render(subtitle, 0, BLACK)
     select_rect = select_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
     screen.blit(select_surf, select_rect)
     pygame.display.update()
 
-    difficulty = None
-
-    while not difficulty:
-        draw_button(easy_button, "Easy", WHITE, DARK_GRAY)
-        draw_button(medium_button, "Medium", WHITE, DARK_GRAY)
-        draw_button(difficult_button, "Difficult", WHITE, DARK_GRAY)
+    while not mode_value:
+        draw_button(button_one, button_names[0], WHITE, DARK_GRAY)
+        draw_button(button_two, button_names[1], WHITE, DARK_GRAY)
+        draw_button(button_three, button_names[2], WHITE, DARK_GRAY)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if easy_button.collidepoint(event.pos):
-                    difficulty = 30
-                elif medium_button.collidepoint(event.pos):
-                    difficulty = 40
-                elif difficult_button.collidepoint(event.pos):
-                    difficulty = 50
+                if button_one.collidepoint(event.pos):
+                    mode_value = options[0]
+                elif button_two.collidepoint(event.pos):
+                    mode_value = options[1]
+                elif button_three.collidepoint(event.pos):
+                    mode_value = options[2]
 
         pygame.display.update()
+    return mode_value
+
+def game_over():
+    lose_surf = START_FONT.render("Game Over :(", 0, BLACK)
+    lose_rect = lose_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    screen.blit(lose_surf, lose_rect)
+
+    while True:
+        restart_button_lose = pygame.Rect(150, HEIGHT // 2 + 50, 100, 40)
+        exit_button_lose = pygame.Rect(350, HEIGHT // 2 + 50, 100, 40)
+
+        draw_button(restart_button_lose, "RESTART", WHITE, DARK_GRAY)
+        draw_button(exit_button_lose, "EXIT", WHITE, DARK_GRAY)
+
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if restart_button_lose.collidepoint(event.pos):
+                    main()
+                elif exit_button_lose.collidepoint(event.pos):
+                    pygame.quit()
+                    sys.exit()
+
+def main():
+
+    pygame.display.set_caption("Sudoku")
+
+    difficulty = select_mode("Select Game Mode:", ["Easy", "Medium", "Difficult"], [30, 40, 50])
+    time_mode = select_mode("Select Time Mode:", ["Unlimited", "3 Min", "5 Min"], [-1, 3, 5])
 
     start_ticks = pygame.time.get_ticks()
 
@@ -325,6 +352,18 @@ def main():
         minutes = elapsed_time // 60
         seconds = elapsed_time % 60
         timer_text = f"Time: {minutes:02}:{seconds:02}"
+
+        if time_mode != -1:
+            timer_text += f" / {time_mode:02}:00"
+
+        if minutes >= time_mode != -1:
+            message = f"Your {time_mode} minutes are up."
+            screen.fill(PINK)
+            lose_surf = START_FONT.render(message, 0, BLACK)
+            lose_rect = lose_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 40))
+            screen.blit(lose_surf, lose_rect)
+
+            game_over()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -397,34 +436,13 @@ def main():
 
             else:
                 screen.fill(PINK)
-                lose_text = "Game Over :("
-                lose_surf = START_FONT.render(lose_text, 0, BLACK)
-                lose_rect = lose_surf.get_rect(center=(WIDTH // 2, HEIGHT // 2))
-                screen.blit(lose_surf, lose_rect)
-
-                while True:
-                    restart_button_lose = pygame.Rect(150, HEIGHT // 2 + 50, 100, 40)
-                    exit_button_lose = pygame.Rect(350, HEIGHT // 2 + 50, 100, 40)
-
-                    draw_button(restart_button_lose, "RESTART", WHITE, DARK_GRAY)
-                    draw_button(exit_button_lose, "EXIT", WHITE, DARK_GRAY)
-
-                    pygame.display.update()
-                    for event in pygame.event.get():
-                        if event.type == pygame.QUIT:
-                            pygame.quit()
-                            sys.exit()
-                        elif event.type == pygame.MOUSEBUTTONDOWN:
-                            if restart_button_lose.collidepoint(event.pos):
-                                main()
-                            elif exit_button_lose.collidepoint(event.pos):
-                                pygame.quit()
-                                sys.exit()
+                game_over()
 
         board.update_board()
         board.draw()
 
         # creating the timer
+        font_timer = pygame.font.Font(None, 35)
         timer_surface = font_timer.render(timer_text, True, BLACK)
         timer_rect = timer_surface.get_rect(center=(WIDTH // 2, 20))
         screen.blit(timer_surface, timer_rect)
@@ -440,5 +458,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
-# nidhi was here
